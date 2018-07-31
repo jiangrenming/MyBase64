@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "27.0.3"
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+}
+task makeJar(type: Copy) {
+    delete 'build/MyBase64_V1.0.jar' //删除之前的旧jar包
+    from('build/intermediates/bundles/default/') //从这个目录下取出默认jar包
+    into('build/') //将jar包输出到指定目录下
+    //去掉不需要打包的目录和文件
+    exclude('test/', 'BuildConfig.class', 'R.class')
+    include('classes.jar')
+    rename('classes.jar', 'MyBase64_V1.0.jar') //自定义jar包的名字
+}
+makeJar.dependsOn(build)
